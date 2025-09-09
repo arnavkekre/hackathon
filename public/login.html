@@ -6,6 +6,50 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <form id="authform">
+        <input type="text" id="firstname" placeholder="First Name*" required>
+        <input type="text" id="lastname" placeholder="Last Name*" required>
+        <input type="text" id="class" placeholder="Standard*" required>
+        <input type="text" id="school" placeholder="School Name*" required>
+        <input type="text" id="board" placeholder="Board*" required>
+        <button type="submit" id="submit">Register</button>
+
+    </form>
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('authform');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const firstname = document.getElementById('firstname').value.trim();
+    const lastname = document.getElementById('lastname').value.trim();
+    const standard = document.getElementById('class').value.trim();
+    const school = document.getElementById('school').value.trim();
+    const board = document.getElementById('board').value.trim();
+
+    if (!firstname || !lastname || !standard || !school || !board) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    try {
+      const response = await fetch('/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ firstname, lastname, standard, school, board }),
+      });
+
+      const data = await response.json();
+      alert(data.message);
+    } catch (err) {
+      console.error('Fetch error:', err);
+      alert('Something went wrong while registering.');
+    }
+  });
+});
+
+    </script>
 </body>
 </html>
