@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <nav>
+        <div id="ques">Question - <span id="number">1</span></div>
+    </nav>
+    <button id="prev" onclick="dec()">Back</button>
+    <button id="next" onclick="inc()">Next</button>
+    <button id="submit" onclick="sub()">Submit</button>
+    <script>
+        function inc(){
+            let num = document.getElementById("number").innerText;
+            num = parseInt(num);
+            document.getElementById("submit").style.display = (num===10 ) ? "block" : "none";
+            if(num<10){
+                num++;
+                document.getElementById("number").innerText = num;
+            }
+        }
+        function dec(){
+            let num = document.getElementById("number").innerText;
+            num = parseInt(num);
+            if(num>1){
+                num--;
+                document.getElementById("number").innerText = num;
+            }
+        }
+        function sub(){
+            
+            alert("Your responses have been recorded. Thank you!");
+        }
+    </script>
+</body>
+</html>
