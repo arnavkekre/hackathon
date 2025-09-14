@@ -5,6 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="/hackserver.js"></script>
+    <style>
+    body {
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      background: 
+        linear-gradient(rgba(220, 230, 245, 0.25), rgba(240, 245, 250, 0.35)),
+        url('universe.jpeg') no-repeat center center fixed;
+      background-size: cover;
+  animation: bgMove 12s cubic-bezier(0.4, 0.2, 0.2, 1) infinite alternate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 40px 20px 0 20px;
+            color: #223044;
+    }
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+            gap: 15px;
+            background: #f8fafc;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(30, 64, 175, 0.07);
+            animation: fadeIn 1s ease;
+        }
+        input {
+            padding: 10px;
+            border: 1px solid #b0b8c9;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #fff;
+            color: #223044;
+        }
+        button {
+            padding: 12px 22px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+            box-shadow: 0 4px 8px rgba(30, 64, 175, 0.10);
+            background: #2563eb;
+            color: #fff;
+        }
+        button:hover {
+            transform: scale(1.05);
+            background: #1e40af;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bgMove {
+      0% {
+        background-position: 48% center;
+      }
+      100% {
+        background-position: 52% center;
+      }
+        }
+    </style>
+
 </head>
 <body>
     <form id="authform">
@@ -16,6 +81,11 @@
         <button type="submit" id="submit">Register</button>
 
     </form>
+     <footer style="margin-top:auto;width:100%;text-align:center;color:#eef3f7;font-size:0.95rem;letter-spacing:0.02em;padding-bottom:24px;">
+      <hr style="border:none;border-top:1px solid #e2e8f0;margin:32px auto 16px auto;width:90%;max-width:400px;">
+      &copy; 2025 Study Portal. All rights reserved.
+    </footer>
+   
     <script>
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('authform');
