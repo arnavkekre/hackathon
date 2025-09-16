@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Creative Quiz Navigator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --accent:#7c3aed; --accent-2:#e3e6e7; }
+    html, body { height: 100%; }
+    body { font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    /* Simple confetti animation */
+    .confetti { position: absolute; top:-10px; width:10px; height:14px; opacity:.9; border-radius:2px; }
+    @keyframes fall {
+      0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      100% { transform: translateY(90vh) rotate(360deg); opacity: 0; }
+    }
+    .glass {
+      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-fuchsia-600 via-indigo-700 to-cyan-600 text-white antialiased selection:bg-white/20 selection:text-white">
+  <!-- Top nav -->
+  <nav class="w-full">
+    <div class="max-w-4xl mx-auto px-6 py-6 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-white/10 grid place-items-center ring-1 ring-white/20">
+          <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none">
+            <path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-sm uppercase tracking-widest text-white/70">Question</p>
+          <p id="ques" class="text-xl font-semibold">Question - <span id="number">1</span></p>
+        </div>
+      </div>
+      <div class="hidden sm:flex items-center gap-2 text-sm text-white/80">
+        <span class="px-2 py-1 rounded-md bg-white/10 ring-1 ring-white/20">←</span>
+        <span>Back</span>
+        <span class="mx-2 opacity-60">/</span>
+        <span class="px-2 py-1 rounded-md bg-white/10 ring-1 ring-white/20">→</span>
+        <span>Next</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main card -->
+  <main class="max-w-4xl mx-auto px-6">
+    <section class="glass rounded-3xl p-6 sm:p-8">
+      <!-- Progress header -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-bold">Creative Quiz Navigator</h1>
+          <p class="text-white/80">Use the controls to move through questions. Reach the end to submit.</p>
+        </div>
+        <div class="text-right">
+          <p class="text-sm text-white/70">Progress</p>
+          <p class="text-lg font-semibold"><span id="progressText">10%</span></p>
+        </div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="w-full h-3 bg-white/10 rounded-full overflow-hidden ring-1 ring-white/20">
+        <div id="progressBar" class="h-full bg-gradient-to-r from-cyan-400 via-indigo-400 to-fuchsia-400 rounded-full transition-all duration-500 ease-out" style="width: 10%"></div>
+      </div>
+
+      <!-- Question card -->
+      <div class="mt-8 grid sm:grid-cols-2 gap-6">
+        <div class="rounded-2xl bg-white/5 ring-1 ring-white/15 p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-400 to-fuchsia-400 grid place-items-center text-indigo-900 font-bold">Q</div>
+            <div>
+              <p class="text-sm uppercase tracking-widest text-white/70">You’re on</p>
+              <p class="text-xl font-semibold">Question <span id="cardNumber">1</span> of <span id="total">10</span></p>
+            </div>
+          </div>
+          <p class="text-white/90 leading-relaxed">
+            This is a sample placeholder. Imagine your real question here. Move forward or back to explore the flow.
+          </p>
+        </div>
+        <div class="rounded-2xl bg-white/5 ring-1 ring-white/15 p-6">
+          <p class="text-white/80 mb-4">Tips</p>
+          <ul class="space-y-3 text-white/90">
+            <li class="flex items-start gap-3">
+              <span class="mt-1 w-6 h-6 rounded-md bg-white/10 grid place-items-center text-sm">↔</span>
+              Use the arrow keys for quick navigation.
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 w-6 h-6 rounded-md bg-white/10 grid place-items-center text-sm">✔</span>
+              The finish button appears on the last question.
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 w-6 h-6 rounded-md bg-white/10 grid place-items-center text-sm">✨</span>
+              Enjoy smooth transitions and a celebratory finish.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        <button id="prev" class="group flex-1 sm:flex-none sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white/10 ring-1 ring-white/20 hover:bg-white/15 transition enabled:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                onclick="dec()" aria-label="Back">
+          <svg class="w-5 h-5 transition-transform group-hover:-translate-x-0.5" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Back
+        </button>
+
+        <div class="flex-1"></div>
+
+        <button id="next" class="group flex-1 sm:flex-none sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-fuchsia-400 text-indigo-900 font-semibold hover:brightness-110 transition enabled:opacity-100 disabled:opacity-60 disabled:cursor-not-allowed"
+                onclick="inc()" aria-label="Next">
+          Next
+          <svg class="w-5 h-5 transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+
+        <button id="submit" class="hidden flex-1 sm:flex-none sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-emerald-400 text-emerald-950 font-semibold hover:brightness-110 transition"
+                onclick="sub()" aria-label="Submit">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Submit
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal -->
+  <div id="modal" class="fixed inset-0 hidden items-center justify-center p-6 z-50">
+    <div class="absolute inset-0 bg-black/60"></div>
+    <div class="relative glass rounded-3xl p-8 max-w-lg w-full text-center">
+      <div class="mx-auto w-16 h-16 rounded-2xl bg-emerald-400 grid place-items-center text-emerald-950 mb-4">
+        <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h2 class="text-2xl font-bold mb-2">Responses recorded!</h2>
+      <p class="text-white/85 mb-6">Thank you for completing all questions. You can close this message or start again.</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <button class="px-5 py-3 rounded-xl bg-white/10 ring-1 ring-white/20 hover:bg-white/15" onclick="closeModal()">Close</button>
+        <button class="px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-fuchsia-400 text-indigo-900 font-semibold hover:brightness-110" onclick="restart()">Restart</button>
+      </div>
+      <div id="confettiWrap" class="pointer-events-none absolute inset-0 overflow-hidden rounded-3xl"></div>
+    </div>
+  </div>
+
+  <script>
+    const total = 10;
+    const numberEl = document.getElementById('number');
+    const cardNumberEl = document.getElementById('cardNumber');
+    const totalEl = document.getElementById('total');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const btnPrev = document.getElementById('prev');
+    const btnNext = document.getElementById('next');
+    const btnSubmit = document.getElementById('submit');
+    const modal = document.getElementById('modal');
+    const confettiWrap = document.getElementById('confettiWrap');
+
+    totalEl.textContent = total;
+
+    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+
+    function updateUI(num){
+      numberEl.textContent = num;
+      cardNumberEl.textContent = num;
+
+      const pct = Math.round((num/total)*100);
+      progressBar.style.width = pct + '%';
+      progressText.textContent = pct + '%';
+
+      btnPrev.disabled = (num <= 1);
+      btnNext.disabled = (num >= total);
+
+      // Show submit only on the last question, mirroring your original intent
+      btnSubmit.classList.toggle('hidden', num !== total);
+    }
+
+    function inc(){
+      let num = parseInt(numberEl.textContent, 10);
+      num = clamp(num + 1, 1, total);
+      updateUI(num);
+    }
+
+    function dec(){
+      let num = parseInt(numberEl.textContent, 10);
+      num = clamp(num - 1, 1, total);
+      updateUI(num);
+    }
+
+    function sub(){
+      // Show modal + confetti
+      openModal();
+      // Also keep the friendly alert from your original version
+      alert("Your responses have been recorded. Thank you!");
+    }
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (modalIsOpen()) return;
+      if (e.key === 'ArrowRight') inc();
+      if (e.key === 'ArrowLeft') dec();
+    });
+
+    // Modal helpers
+    function modalIsOpen(){ return !modal.classList.contains('hidden'); }
+    function openModal(){
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      launchConfetti();
+    }
+    function closeModal(){
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      clearConfetti();
+    }
+    function restart(){
+      closeModal();
+      updateUI(1);
+    }
+
+    // Simple confetti generator (no external libraries)
+    function launchConfetti(){
+      clearConfetti();
+      const colors = ['#34d399','#facc15','#60a5fa','#f472b6','#a78bfa','#22d3ee'];
+      const pieces = 40;
+      for (let i = 0; i < pieces; i++){
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.style.left = Math.random()*100 + '%';
+        c.style.background = colors[Math.floor(Math.random()*colors.length)];
+        c.style.animation = `fall ${2 + Math.random()*2}s linear ${Math.random()}s forwards`;
+        c.style.transform = `translateY(-10vh) rotate(${Math.random()*360}deg)`;
+        confettiWrap.appendChild(c);
+      }
+    }
+    function clearConfetti(){
+      confettiWrap.innerHTML = '';
+    }
+
+    // Initialize
+    updateUI(1);
+  </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9801c61900114b5d',t:'MTc1ODA0MDQ5My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
