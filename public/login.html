@@ -78,7 +78,7 @@
         <input type="text" id="class" placeholder="Standard*" required>
         <input type="text" id="school" placeholder="School Name*" required>
         <input type="text" id="board" placeholder="Board*" required>
-        <button type="submit" id="submit">Register</button>
+        <button onclick="Question()" type="submit" id="submit">Register</button>
 
     </form>
      <footer style="margin-top:auto;width:100%;text-align:center;color:#eef3f7;font-size:0.95rem;letter-spacing:0.02em;padding-bottom:24px;">
@@ -120,7 +120,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
-
+function Question(){
+window.location.href="/new_questions.html"
+}
     </script>
 </body>
 </html>
